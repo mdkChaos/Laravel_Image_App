@@ -56,6 +56,7 @@ onMounted(() => {
         <div v-if="post">
             <h4>{{ post.title }}</h4>
             <div v-for="image in post.images" :key="image" class="mt-3">
+                <img :src="image.preview_url" alt="img" class="mb-3" />
                 <img :src="image.url" alt="img">
             </div>
         </div>

@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
 
 class PostController extends Controller
 {
@@ -42,13 +43,19 @@ class PostController extends Controller
         $post = Post::firstOrCreate($data);
         foreach ($images as $image) {
             $name = md5(Carbon::now()->timestamp . '_' . uniqid() . '_' . $image->getClientOriginalName()) . '.' . $image->getClientOriginalExtension();
+            $previewName = 'prev_' . $name;
             $filePath = Storage::disk('public')->putFileAs('/images', $image, $name);
 
             Image::create([
                 'path' => $filePath,
                 'url' => url('/storage/' . $filePath),
+                'preview_url' => url('/storage/images/' . $previewName),
                 'post_id' => $post->id,
             ]);
+
+            $manager = ImageManager::imagick();
+            $imagePreview = $manager->read($image);
+            $imagePreview->resize(100, 100)->save(storage_path('/app/public/images/' . $previewName));
         }
         return response()->json(['message' => 'Post created']);
     }
