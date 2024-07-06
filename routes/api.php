@@ -9,5 +9,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::prefix('posts')->controller(PostController::class)->group(function () {
+    Route::get('/', 'index')->name('posts.index');
     Route::post('/store', 'store')->name('posts.store');
 });
