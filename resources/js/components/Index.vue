@@ -13,6 +13,7 @@ const store = async () => {
     try {
         const data = new FormData();
         data.append('title', title.value);
+        data.append('content', content.value);
         const files = dropzone.getAcceptedFiles();
         files.forEach(file => {
             data.append('images[]', file);
@@ -23,6 +24,7 @@ const store = async () => {
         console.error('Error while storing post:', error);
     } finally {
         title.value = '';
+        content.value = '';
         dropzone.removeAllFiles();
     }
 };
@@ -78,6 +80,7 @@ onMounted(() => {
     <div class="col-3 mt-5">
         <div v-if="post">
             <h4>{{ post.title }}</h4>
+            <div v-html="post.content" class="mt-3 ql-editor"></div>
             <div v-for="image in post.images" :key="image" class="mt-3">
                 <img :src="image.preview_url" alt="img" class="mb-3"/>
                 <img :src="image.url" alt="img">
@@ -85,3 +88,11 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style>
+.dz-success-mark,
+.dz-error-mark
+{
+    display: none;
+}
+</style>

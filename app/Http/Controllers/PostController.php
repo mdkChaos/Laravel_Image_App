@@ -39,8 +39,11 @@ class PostController extends Controller
     {
         $data = $request->validated();
         $images = $data['images'];
+        dump($data);
         unset($data['images']);
+        dump($data);
         $post = Post::firstOrCreate($data);
+        dump($post);
         foreach ($images as $image) {
             $name = md5(Carbon::now()->timestamp . '_' . uniqid() . '_' . $image->getClientOriginalName()) . '.' . $image->getClientOriginalExtension();
             $previewName = 'prev_' . $name;
